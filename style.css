@@ -1,0 +1,157 @@
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 14pt;
+    background: #333333;
+    color: #ffffff;
+}
+
+code {
+    font-size: 1em;
+    font-family: monospace,monospace;
+}
+
+dt {
+    float: left;
+    margin-bottom: 1em;
+    width: 10em;
+    text-align: right;
+    font-weight: bold;
+}
+
+dd {
+    margin-left: 11em;
+    margin-bottom: 1em;
+    clear: right;
+}
+
+h2 {
+    border-bottom: 1px solid #ccc;
+    margin: 1.5em 0 0.5em 0;
+}
+
+#footer {
+    border-top: 1px solid #ccc;
+    padding-top: 1em;
+    font-size: 10pt;
+    font-style: italic;
+    color: #ccc;
+    margin: 5em 0 0 0;
+}
+
+#sendText {
+    font-family: Menlo, Consolas, monospace, monospace;
+    font-size: 15pt;
+    font-weight: bold;
+    width: 100%;
+    margin: 2em 0 2em 0;
+    height: 9em;
+    min-height: 9em;
+    max-height: 9em;
+    line-height: 1.5em;
+    text-align: left;
+    padding: 16px;
+    border: 1px solid #ccc;
+}
+
+#player {
+    text-align: center;
+    margin: 60px auto 300px auto;
+}
+
+.container {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 0;
+}
+
+a {
+    color: #99cccc;
+}
+
+#links a {
+    padding: 12pt;
+    font-size: 16pt;
+}
+
+.container h3 {
+    margin: 0 0 8px 0;
+    padding: 0 8px 0 8px;
+}
+
+input[type=checkbox] {
+    margin: 0;
+    padding: 0;
+}
+
+.cgroup {
+    min-width: 230px;
+}
+
+.hilighted {
+    background: #444444;
+    color: #ffff00;
+    font-style: italic;
+}
+
+.container h3 {
+    font-size: 11pt;
+}
+
+.bigProsign, .prosign {
+    display: inline-block;
+    padding: 0;
+    margin-top: 0.04em;
+    line-height: 0.95em;
+    width: 1.2em;
+}
+
+.bigProsign {
+    border-top: .1em solid #ffff00;
+}
+
+.prosign {
+    padding-top: 0.1em;
+    border-top: .12em solid #ffffff;
+}
+
+input[type=button] {
+    font-size: 18pt;
+    margin: 9px;
+    background: #ffffff;
+    border-radius: 5pt;
+    width: 7em;
+    padding: 4px 0 4px 0;
+}
+
+#player {
+    width: 750px;
+    max-width: 750px;
+}
+
+#explainer, #footer {
+    text-align: left;
+}
+
+#explainer {
+    margin-top: 3em;
+}
+
+#output {
+    background: #000000;
+    color: #ffff00;
+    width: 1em;
+    border: 2px solid white;
+    border-radius: 16pt;
+    font-family: Menlo, Consolas, monospace, monospace;
+    font-weight: bold;
+    font-size: 220pt;
+    width: 2em;
+    min-width: 2em;
+    min-height: 1em;
+    max-height: 1em;
+    height: 1em;
+    text-align: center;
+    padding: 3px;
+    line-height: 1em;
+    margin: 0.2em auto 0em auto;
+}
