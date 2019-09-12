@@ -43,8 +43,12 @@
           </select>
         </div>
         <div class="container">
-          <h3>Hide After Send</h3>
-          <input type="checkbox" id="hideAfterSend" checked="true">
+          <h3>Display</h3>
+          <select class="select" id="displaySelect">
+            <option value="immediate">Immediate</option>
+            <option value="lingering">Lingering</option>
+            <option value="delayed">Delayed</option>
+          </select>
         </div>
         <div class="container">
           <h3>Type</h3>
@@ -103,12 +107,20 @@
             each character. Start slow, and gradually increase the
             Farnsworth speed until you have difficulty copying.</dd>
 
-          <dt>Hide After Send</dt>
-          <dd>By default, each character is displayed only while it is
-            actively being sent, and then immediately hidden after it
-            has been sent.  If this box is unchecked, the last sent
-            character will remain visible until the next character is
-            being sent.</dd>
+          <dt>Display</dt>
+          <dd>
+            <p>There are three possible options for display mode.</p>
+            <ol>
+              <li><em>Immediate</em>: The character is displayed during
+                the transmission of the character only, but hidden
+                as soon as the character has been transmitted.</li>
+              <li><em>Lingering</em>: The character is displayed during
+                the transmission of the character, but will hang around
+                until the next character is transmitted.</li>
+              <li><em>Delayed</em>: The character will be displayed
+                starting immediately <em>after</em> the character has
+                been sent.</li>
+            </ol>
 
           <dt>Type</dt>
           <dd>Select between <em>Top CW Words</em>, which will display
@@ -190,8 +202,6 @@
       var text;
 
       var charNum = 0;
-
-      var hideAfterSend = true;
 
       function $(id) {
           return document.getElementById(id);
@@ -282,8 +292,12 @@
           var newText = text.replace(/@/g, '');
 
           charNum += c.length;
-          
-          $("output").innerHTML = c;
+
+          if ($("displaySelect").value === "delayed") {
+              $("output").innerHTML = "";
+          } else {
+              $("output").innerHTML = c;
+          }
 
           newText = 
               "<span class=\"hilighted\">" + newText.substring(0, charNum) + "</span>" +
@@ -297,7 +311,9 @@
       }
 
       function hideChar(c) {
-          if (hideAfterSend) {
+          if ($("displaySelect").value === "delayed") {
+              $("output").innerHTML = c;
+          } else if ($("displaySelect").value === "immediate") {
               $("output").innerHTML = "";
           }
       }
@@ -345,10 +361,6 @@
 
       $("wpmSelect").onchange = setWpm;
       $("fwSelect").onchange = setWpm;
-      $("hideAfterSend").checked = true;
-      $("hideAfterSend").onchange = function() {
-          hideAfterSend = $("hideAfterSend").checked;
-      };
       $("typeSelect").onchange = updateConfig;
 
       $("textButton").onclick = generateText;

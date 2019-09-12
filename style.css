@@ -42,8 +42,9 @@ h2 {
     font-family: Menlo, Consolas, monospace, monospace;
     font-size: 15pt;
     font-weight: bold;
-    width: 100%;
-    margin: 2em 0 2em 0;
+    width: 720px;
+    max-width: 720px;
+    margin: 2em auto 2em auto;
     height: 9em;
     min-height: 9em;
     max-height: 9em;

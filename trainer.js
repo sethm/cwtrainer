@@ -72,7 +72,6 @@ let CwTrainer = (function () {
 
     const PROSIGNS = {
         'AR': '.-.-.',
-        'AS': '.-...',
         'BT': '-...-',
         'SK': '...-.-',
         'KN': '-.--.',
@@ -125,7 +124,7 @@ let CwTrainer = (function () {
     ];
 
     PROSIGN_LIST = [
-        '@AR', '@AS', '@BT', '@SK', '@KN', '@BK'
+        '@AR', '@BT', '@SK', '@KN', '@BK'
     ];
 
     var fwWpm;
