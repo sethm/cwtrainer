@@ -84,7 +84,7 @@ let CwTrainer = (function () {
     // works on Firefox browser at the present time, due to a known
     // bug.)
     const RAMP = 0.005;
-    
+
     // This is NOT an exhaustive list of US callsign prefixes,
     // but a good sampling.
     const CALLPREFIXES = [
@@ -183,7 +183,7 @@ let CwTrainer = (function () {
                 gainNode.gain.setValueAtTime(OFF, audioContext.currentTime);
 
                 oscNode.connect(gainNode);
-                
+
                 gainNode.connect(audioContext.destination);
 
                 oscNode.start();
@@ -208,10 +208,10 @@ let CwTrainer = (function () {
         //
         setWpm(wpm, fw) {
             let fwDotWidth = 1.2 / fw;
-            
+
             dotWidth = 1.2 / wpm;
             dashWidth = dotWidth * 3.0;
-            
+
             charSpace = fwDotWidth * 3.0;
             wordSpace = fwDotWidth * 7.0;
         }
@@ -328,11 +328,11 @@ let CwTrainer = (function () {
             callsign += NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
 
             callsign += LETTERS[Math.floor(Math.random() * LETTERS.length)];
-            
+
             if (Math.random() > 0.5) {
                 callsign += LETTERS[Math.floor(Math.random() * NUMBERS.length)];
             }
-            
+
             if (Math.random() > 0.5) {
                 callsign += LETTERS[Math.floor(Math.random() * NUMBERS.length)];
             }
@@ -388,7 +388,7 @@ let CwTrainer = (function () {
                 }, (time - audioContext.currentTime) * 1000.0));
             }
         }
-        
+
         _sendWord(wordOrProsign) {
             if (wordOrProsign.startsWith('@')) {
                 // Any word starting with @ is a prosign.
@@ -399,7 +399,7 @@ let CwTrainer = (function () {
                 this._doSend(PROSIGNS[wordOrProsign], wordOrProsign);
                 return;
             }
-            
+
             for (let i = 0; i < wordOrProsign.length; i++) {
                 this._doSend(CHARS[wordOrProsign[i].toUpperCase()], wordOrProsign[i].toUpperCase());
                 if (i < wordOrProsign.length - 1) {
