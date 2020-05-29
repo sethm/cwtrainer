@@ -1,7 +1,7 @@
 //
 // A Visual Farnsworth CW Trainer.
 //
-// Copyright (c) 2019, Seth Morabito <web@loomcom.com>
+// Copyright (c) 2019, 2020, Seth Morabito <web@loomcom.com>
 //
 // This software is licensed under the terms of the GNU Affero GPL
 // version 3.0. Please see the file LICENSE.txt for details.
@@ -123,26 +123,25 @@ let CwTrainer = (function () {
         'PWR', 'WX', '73', '5NN', '599', 'U', 'BTU', 'TST'
     ];
 
-    PROSIGN_LIST = [
+    const PROSIGN_LIST = [
         '@AR', '@BT', '@SK', '@KN', '@BK'
     ];
 
-    var fwWpm;
-    var audioContext;
-    var oscNode;
-    var gainNode;
-    var time;
-    var dotWidth;
-    var dashWidth;
-    var charSpace;
-    var wordSpace;
+    let audioContext;
+    let oscNode;
+    let gainNode;
+    let time;
+    let dotWidth;
+    let dashWidth;
+    let charSpace;
+    let wordSpace;
 
-    var beforeCharCallback;
-    var afterCharCallback;
-    var afterSendCallback;
-    var afterCancelCallback;
+    let beforeCharCallback;
+    let afterCharCallback;
+    let afterSendCallback;
+    let afterCancelCallback;
 
-    var pendingTimeouts = [];
+    let pendingTimeouts = [];
 
     class CwTrainer {
 
@@ -166,7 +165,7 @@ let CwTrainer = (function () {
             afterSendCallback = afterSendCb;
             afterCancelCallback = afterCancelCb;
 
-            var AudioContext = (window.AudioContext ||
+            let AudioContext = (window.AudioContext ||
                                 window.webkitAudioContext ||
                                 false);
 
@@ -193,11 +192,20 @@ let CwTrainer = (function () {
             }
         }
 
+        //
+        // Public API
+        //
+
+        //
+        // Unsuspend sending
+        //
         unsuspend() {
             audioContext.resume();
         }
 
+        //
         // Set the Words per Minute to be used by this trainer.
+        //
         setWpm(wpm, fw) {
             let fwDotWidth = 1.2 / fw;
             
@@ -208,30 +216,15 @@ let CwTrainer = (function () {
             wordSpace = fwDotWidth * 7.0;
         }
 
-        makeCallSign() {
-            var callsign = CALLPREFIXES[Math.floor(Math.random() * CALLPREFIXES.length)];
-
-            callsign += NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
-
-            callsign += LETTERS[Math.floor(Math.random() * LETTERS.length)];
-            
-            if (Math.random() > 0.5) {
-                callsign += LETTERS[Math.floor(Math.random() * NUMBERS.length)];
-            }
-            
-            if (Math.random() > 0.5) {
-                callsign += LETTERS[Math.floor(Math.random() * NUMBERS.length)];
-            }
-
-            return callsign;
-        }
-
+        //
+        // Generate random text based on the most common words
+        //
         randomText(numWords) {
-            var words = [];
-            
-            for (var i = 0; i < numWords; i++) {
+            let words = [];
+
+            for (let i = 0; i < numWords; i++) {
                 if (Math.random() < 0.05 && this.enableCallsigns) {
-                    words.push(this.makeCallSign());
+                    words.push(this._makeCallSign());
                 } else if (Math.random() < 0.05 && this.enableProsigns) {
                     words.push(
                         PROSIGN_LIST[Math.floor(Math.random() * PROSIGN_LIST.length)]
@@ -245,10 +238,13 @@ let CwTrainer = (function () {
 
             return words.join(" ");
         }
-        
+
+        //
+        // Generate random groups of characters
+        //
         randomGroups(numGroups, groupSize) {
-            var groups = [];
-            var alphabet = [];
+            let groups = [];
+            let alphabet = [];
 
             if (this.enableLetters) {
                 alphabet = alphabet.concat(LETTERS);
@@ -265,12 +261,12 @@ let CwTrainer = (function () {
             if (alphabet.length === 0) {
                 return "";
             }
-            
-            for (var i = 0; i < numGroups; i++) {
-                var group = "";
-                
-                for (var j = 0; j < groupSize; j++) {
-                    var c = alphabet[Math.floor(Math.random() * alphabet.length)];
+
+            for (let i = 0; i < numGroups; i++) {
+                let group = "";
+
+                for (let j = 0; j < groupSize; j++) {
+                    let c = alphabet[Math.floor(Math.random() * alphabet.length)];
                     group = group + c;
                 }
 
@@ -280,97 +276,19 @@ let CwTrainer = (function () {
             return groups.join(" ");
         }
 
-        sendMorseString(str) {
-            for (var i = 0; i < str.length; i++) {
-                var e = str[i];
-                if (e === '.') {
-                    gainNode.gain.setValueAtTime(OFF, time);
-                    gainNode.gain.exponentialRampToValueAtTime(ON, time + RAMP);
-                    gainNode.gain.setValueAtTime(ON, time + dotWidth);
-                    gainNode.gain.exponentialRampToValueAtTime(OFF, time + dotWidth + RAMP);
-                    time = time + dotWidth + RAMP;
-                } else if (e === '-') {
-                    gainNode.gain.setValueAtTime(OFF, time);
-                    gainNode.gain.exponentialRampToValueAtTime(ON, time + RAMP);
-                    gainNode.gain.setValueAtTime(ON, time + dashWidth);
-                    gainNode.gain.exponentialRampToValueAtTime(OFF, time + dashWidth + RAMP);
-                    time = time + dashWidth + RAMP;
-                }
-                if (i < str.length - 1) {
-                    time = time + dotWidth + RAMP;
-                }
-            }
-        }
-        
-        sendChar(c) {
-            var morseValue = CHARS[c];
-
-            if (beforeCharCallback) {
-                pendingTimeouts.push(setTimeout(function() {
-                    beforeCharCallback(c);
-                }, (time - audioContext.currentTime) * 1000.0));
-            }
-            
-            if (morseValue) {
-                this.sendMorseString(morseValue);
-            }
-
-            if (afterCharCallback) {
-                pendingTimeouts.push(setTimeout(function() {
-                    afterCharCallback(c);
-                }, (time - audioContext.currentTime) * 1000.0));
-            }
-        }
-
-        sendProsign(prosign) {
-            if (prosign.startsWith('@')) {
-                prosign = prosign.substring(1, prosign.length);
-            }
-            
-            var morseValue = PROSIGNS[prosign];
-
-            if (beforeCharCallback) {
-                pendingTimeouts.push(setTimeout(function() {
-                    beforeCharCallback(prosign);
-                }, (time - audioContext.currentTime) * 1000.0));
-            }
-            
-            if (morseValue) {
-                this.sendMorseString(morseValue);
-            }
-
-            if (afterCharCallback) {
-                pendingTimeouts.push(setTimeout(function() {
-                    afterCharCallback(prosign);
-                }, (time - audioContext.currentTime) * 1000.0));
-            }
-        }
-        
-        sendWord(word) {
-            if (word.startsWith('@')) {
-                // Any word starting with @ is a prosign.
-                this.sendProsign(word);
-                return;
-            }
-            
-            for (var i = 0; i < word.length; i++) {
-                this.sendChar(word[i].toUpperCase());
-                if (i < word.length - 1) {
-                    time = time + charSpace;
-                }
-            }
-        }
-
+        //
+        // Send a full text
+        //
         sendText(text) {
             // Add a small 1/2 second delay after the send button
             // is clicked.
             gainNode.gain.setValueAtTime(OFF, audioContext.currentTime);
             time = audioContext.currentTime + 0.5;
 
-            var words = text.split(" ");
+            let words = text.split(' ');
 
-            for (var i = 0; i < words.length; i++) {
-                this.sendWord(words[i]);
+            for (let i = 0; i < words.length; i++) {
+                this._sendWord(words[i]);
                 if (i < words.length - 1) {
                     time = time + wordSpace;
                 }
@@ -378,16 +296,19 @@ let CwTrainer = (function () {
 
             if (afterSendCallback) {
                 pendingTimeouts.push(setTimeout(afterSendCallback,
-                                                (time - audioContext.currentTime) * 1000.0));
+                    (time - audioContext.currentTime) * 1000.0));
             }
         }
 
+        //
+        // Suspend sending immediately
+        //
         cancel() {
             gainNode.gain.cancelScheduledValues(audioContext.currentTime);
             gainNode.gain.setValueAtTime(OFF, audioContext.currentTime);
             time = 0.0;
 
-            for (var i = pendingTimeouts.length - 1; i >= 0; i--) {
+            for (let i = pendingTimeouts.length - 1; i >= 0; i--) {
                 window.clearTimeout(pendingTimeouts[i]);
                 pendingTimeouts.pop();
             }
@@ -396,7 +317,97 @@ let CwTrainer = (function () {
                 afterCancelCallback();
             }
         }
+
+        //
+        // Private functions
+        //
+
+        _makeCallSign() {
+            let callsign = CALLPREFIXES[Math.floor(Math.random() * CALLPREFIXES.length)];
+
+            callsign += NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
+
+            callsign += LETTERS[Math.floor(Math.random() * LETTERS.length)];
+            
+            if (Math.random() > 0.5) {
+                callsign += LETTERS[Math.floor(Math.random() * NUMBERS.length)];
+            }
+            
+            if (Math.random() > 0.5) {
+                callsign += LETTERS[Math.floor(Math.random() * NUMBERS.length)];
+            }
+
+            return callsign;
+        }
+
+        //
+        // Send an individual element, either a dot or a dash.
+        //
+        _sendDotOrDash(width) {
+            gainNode.gain.setValueAtTime(OFF, time);
+            gainNode.gain.exponentialRampToValueAtTime(ON, time + RAMP);
+            gainNode.gain.setValueAtTime(ON, time + width);
+            gainNode.gain.exponentialRampToValueAtTime(OFF, time + width + RAMP);
+            time = time + width + RAMP;
+        }
+
+        //
+        // Send a list of dots and dashes
+        //
+        _sendMorseString(str) {
+            for (let i = 0; i < str.length; i++) {
+                let e = str[i];
+                if (e === '.') {
+                    this._sendDotOrDash(dotWidth);
+                } else if (e === '-') {
+                    this._sendDotOrDash(dashWidth)
+                }
+                if (i < str.length - 1) {
+                    time = time + dotWidth + RAMP;
+                }
+            }
+        }
+
+        //
+        // Send an individual ASCII character or Prosign
+        //
+        _doSend(morseValue, val) {
+            if (beforeCharCallback) {
+                pendingTimeouts.push(setTimeout(function() {
+                    beforeCharCallback(val);
+                }, (time - audioContext.currentTime) * 1000.0));
+            }
+
+            if (morseValue) {
+                this._sendMorseString(morseValue);
+            }
+
+            if (afterCharCallback) {
+                pendingTimeouts.push(setTimeout(function() {
+                    afterCharCallback(val);
+                }, (time - audioContext.currentTime) * 1000.0));
+            }
+        }
+        
+        _sendWord(wordOrProsign) {
+            if (wordOrProsign.startsWith('@')) {
+                // Any word starting with @ is a prosign.
+                if (wordOrProsign.startsWith('@')) {
+                    wordOrProsign = wordOrProsign.substring(1, wordOrProsign.length);
+                }
+
+                this._doSend(PROSIGNS[wordOrProsign], wordOrProsign);
+                return;
+            }
+            
+            for (let i = 0; i < wordOrProsign.length; i++) {
+                this._doSend(CHARS[wordOrProsign[i].toUpperCase()], wordOrProsign[i].toUpperCase());
+                if (i < wordOrProsign.length - 1) {
+                    time = time + charSpace;
+                }
+            }
+        }
     }
-    
+
     return CwTrainer;
 })();

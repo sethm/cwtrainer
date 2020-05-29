@@ -1,374 +1,399 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>Visual Farnsworth CW Trainer</title>
     <link rel="stylesheet" href="style.css">
-    <script language="javascript" src="trainer.js"></script>
-  </head>
-  <body id="home">
-    <a name="top"></a>
-    <div id="player">
-      <h1>A Visual Farnsworth CW Trainer</h1>
-      <div id="links">
+    <script type="application/javascript" src="trainer.js"></script>
+</head>
+<body id="home">
+<a id="top"></a>
+<div id="player">
+    <h1>A Visual Farnsworth CW Trainer</h1>
+    <div id="links">
         <a href="#about">About</a>
         <a href="#help">Help</a>
-      </div>
-      <div id="output"></div>
-      <div id="controls">
+    </div>
+    <div id="output"></div>
+    <div id="controls">
         <div class="container">
-          <h3>Elements</h3>
-          <select class="select" id="wpmSelect">
-            <option value="15">15 WPM</option>
-            <option value="18">18 WPM</option>
-            <option value="20">20 WPM</option>
-            <option value="23">23 WPM</option>
-            <option value="25">25 WPM</option>
-            <option value="30">30 WPM</option>
-          </select>
+            <label for="wpmSelect">Elements</label>
+            <select class="select" id="wpmSelect">
+                <option value="15">15 WPM</option>
+                <option value="18">18 WPM</option>
+                <option value="20">20 WPM</option>
+                <option value="23">23 WPM</option>
+                <option value="25">25 WPM</option>
+                <option value="30">30 WPM</option>
+            </select>
         </div>
         <div class="container">
-          <h3>Farnsworth</h3>
-          <select class="select" id="fwSelect">
-            <option value="3">3 WPM</option>
-            <option value="5">5 WPM</option>
-            <option value="8">8 WPM</option>
-            <option value="10">10 WPM</option>
-            <option value="13">13 WPM</option>
-            <option value="15">15 WPM</option>
-            <option value="18">18 WPM</option>
-            <option value="20">20 WPM</option>
-            <option value="25">25 WPM</option>
-            <option value="30">30 WPM</option>
-          </select>
+            <label for="fwSelect">Farnsworth</label>
+            <select class="select" id="fwSelect">
+                <option value="3">3 WPM</option>
+                <option value="5">5 WPM</option>
+                <option value="8">8 WPM</option>
+                <option value="10">10 WPM</option>
+                <option value="13">13 WPM</option>
+                <option value="15">15 WPM</option>
+                <option value="18">18 WPM</option>
+                <option value="20">20 WPM</option>
+                <option value="25">25 WPM</option>
+                <option value="30">30 WPM</option>
+            </select>
         </div>
         <div class="container">
-          <h3>Display</h3>
-          <select class="select" id="displaySelect">
-            <option value="immediate">Immediate</option>
-            <option value="lingering">Lingering</option>
-            <option value="delayed">Delayed</option>
-          </select>
+            <label for="displaySelect">Display</label>
+            <select class="select" id="displaySelect">
+                <option value="immediate">Immediate</option>
+                <option value="lingering">Lingering</option>
+                <option value="delayed">Delayed</option>
+            </select>
         </div>
         <div class="container">
-          <h3>Type</h3>
-          <select class="select" id="typeSelect">
-            <option value="words">Top CW Words</option>
-            <option value="random">Random Groups</option>
-          </select>
+            <label for="typeSelect">Type</label>
+            <select class="select" id="typeSelect">
+                <option value="words">Top CW Words</option>
+                <option value="random">Random Groups</option>
+            </select>
         </div>
         <div class="container cgroup" id="selectedType"></div>
-      </div>
-      <div>
+    </div>
+    <div>
         <div id="sendText"></div>
-      </div>
-      <input type="button" id="textButton" value="New Text" />
-      <input type="button" id="sendButton" value="Send" />
-      <input type="button" id="cancelButton" value="Stop" disabled="true" />
-      <div id="explainer">
-        <a name="about"></a>
+    </div>
+    <input type="button" id="textButton" value="New Text"/>
+    <input type="button" id="sendButton" value="Send"/>
+    <input type="button" id="cancelButton" value="Stop" disabled/>
+    <div id="explainer">
+        <a id="about"></a>
         <h2>About</h2>
         <p>This trainer is a small personal project designed to play
-          with learning morse code through the Farnsworth method.</p>
-        
+            with learning morse code through the Farnsworth method.</p>
+
         <p>The main difference between this trainer and others is that I
-          am experimenting with visual reinforcement by displaying the
-          character currently being sent. It is my hope that this will
-          help form a stronger link between the <em>sound</em> of CW
-          and the <em>meaning</em> of the sound.</p>
+            am experimenting with visual reinforcement by displaying the
+            character currently being sent. It is my hope that this will
+            help form a stronger link between the <em>sound</em> of CW
+            and the <em>meaning</em> of the sound.</p>
 
         <p>This page should work in any modern desktop or mobile
-          browser, including Edge, Safari, Chrome, Firefox, and
-          Opera. But, please be aware that it does not work in
-          Internet Explorer, because IE does not support the Web Audio
-          API.</p>
-        
+            browser, including Edge, Safari, Chrome, Firefox, and
+            Opera. But, please be aware that it does not work in
+            Internet Explorer, because IE does not support the Web Audio
+            API.</p>
+
         <a href="#top">Top</a>
 
-        <a name="help"></a>
+        <a id="help"></a>
         <h2>Help</h2>
         <dl>
-          <dt>New Text</dt>
-          <dd>Generate a new practice text based on current settings</dd>
+            <dt>New Text</dt>
+            <dd>Generate a new practice text based on current settings</dd>
 
-          <dt>Send</dt>
-          <dd>Start sending immediately</dd>
+            <dt>Send</dt>
+            <dd>Start sending immediately</dd>
 
-          <dt>Stop</dt>
-          <dd>Stop sending immediately</dd>
-          
-          <dt>Elements (Speed)</dt>
-          <dd>Sets the speed used for the spacing of dits and dahs
-            within each individual character. It is suggested that you
-            not put this below 20WPM.</dd>
+            <dt>Stop</dt>
+            <dd>Stop sending immediately</dd>
 
-          <dt>Farnsworth (Speed)</dt>
-          <dd>Sets the speed that will be used for spacing inbetween
-            each character. Start slow, and gradually increase the
-            Farnsworth speed until you have difficulty copying.</dd>
+            <dt>Elements (Speed)</dt>
+            <dd>Sets the speed used for the spacing of dits and dahs
+                within each individual character. It is suggested that you
+                not put this below 20WPM.
+            </dd>
 
-          <dt>Display</dt>
-          <dd>
-            <p>There are three possible options for display mode.</p>
-            <ol>
-              <li><em>Immediate</em>: The character is displayed during
-                the transmission of the character only, but hidden
-                as soon as the character has been transmitted.</li>
-              <li><em>Lingering</em>: The character is displayed during
-                the transmission of the character, but will hang around
-                until the next character is transmitted.</li>
-              <li><em>Delayed</em>: The character will be displayed
-                starting immediately <em>after</em> the character has
-                been sent.</li>
-            </ol>
+            <dt>Farnsworth (Speed)</dt>
+            <dd>Sets the speed that will be used for spacing inbetween
+                each character. Start slow, and gradually increase the
+                Farnsworth speed until you have difficulty copying.
+            </dd>
 
-          <dt>Type</dt>
-          <dd>Select between <em>Top CW Words</em>, which will display
-            a random selection of the top 100 most common words, or
-            <em>Random Groups</em>, which will send random groups of
-            five characters each.</dd>
+            <dt>Display</dt>
+            <dd>
+                <p>There are three possible options for display mode.</p>
+                <ol>
+                    <li><em>Immediate</em>: The character is displayed during
+                        the transmission of the character only, but hidden
+                        as soon as the character has been transmitted.
+                    </li>
+                    <li><em>Lingering</em>: The character is displayed during
+                        the transmission of the character, but will hang around
+                        until the next character is transmitted.
+                    </li>
+                    <li><em>Delayed</em>: The character will be displayed
+                        starting immediately <em>after</em> the character has
+                        been sent.
+                    </li>
+                </ol>
 
-          <dt>Call Signs</dt>
-          <dd>If checked, include randomly generated call signs in the
-            <em>Top CW Words</em>.</dd>
+            <dt>Type</dt>
+            <dd>Select between <em>Top CW Words</em>, which will display
+                a random selection of the top 100 most common words, or
+                <em>Random Groups</em>, which will send random groups of
+                five characters each.
+            </dd>
 
-          <dt>Prosigns</dt>
-          <dd>If checked, include prosigns in the <em>Top CW Words</em>.
-            Prosigns include
-            <strong>AR</strong> (&ldquo;DISREGARD&rdquo;),
-            <strong>AS</strong> (&ldquo;WAIT&rdquo;),
-            <strong>BT</strong> (&ldquo;NEW PARAGRAPH&rdquo;),
-            <strong>SK</strong> (&ldquo;END OF CONTACT&rdquo;),
-            <strong>KN</strong> (&ldquo;GO AHEAD&rdquo;), and
-            <strong>BK</strong> (&ldquo;BREAK&rdquo;).</dd>
+            <dt>Call Signs</dt>
+            <dd>If checked, include randomly generated call signs in the
+                <em>Top CW Words</em>.
+            </dd>
 
-          <dt>Letters</dt>
-          <dd>If checked, include the characters A&ndash;Z in the
-            randomly generated character group.</dd>
+            <dt>Prosigns</dt>
+            <dd>If checked, include prosigns in the <em>Top CW Words</em>.
+                Prosigns include
+                <strong>AR</strong> (&ldquo;DISREGARD&rdquo;),
+                <strong>AS</strong> (&ldquo;WAIT&rdquo;),
+                <strong>BT</strong> (&ldquo;NEW PARAGRAPH&rdquo;),
+                <strong>SK</strong> (&ldquo;END OF CONTACT&rdquo;),
+                <strong>KN</strong> (&ldquo;GO AHEAD&rdquo;), and
+                <strong>BK</strong> (&ldquo;BREAK&rdquo;).
+            </dd>
 
-          <dt>Numbers</dt>
-          <dd>If checked, include the characters 0&ndash;9 in the
-            randomly generated character groups.</dd>
+            <dt>Letters</dt>
+            <dd>If checked, include the characters A&ndash;Z in the
+                randomly generated character group.
+            </dd>
 
-          <dt>Symbols</dt>
-          <dd>If checked, include the characters &ldquo;.&rdquo;
-            (period), &ldquo;,&rdquo; (comma), &ldquo;?&rdquo;
-            (question mark), &ldquo;=&rdquo; (equal sign), and
-            &rdquo;/&ldquo; (slash) in the randomly generated
-            character groups.</dd>
+            <dt>Numbers</dt>
+            <dd>If checked, include the characters 0&ndash;9 in the
+                randomly generated character groups.
+            </dd>
+
+            <dt>Symbols</dt>
+            <dd>If checked, include the characters &ldquo;.&rdquo;
+                (period), &ldquo;,&rdquo; (comma), &ldquo;?&rdquo;
+                (question mark), &ldquo;=&rdquo; (equal sign), and
+                &rdquo;/&ldquo; (slash) in the randomly generated
+                character groups.
+            </dd>
         </dl>
         <a href="#top">Top</a>
-            
-      </div>
-      <div id="footer">
+
+    </div>
+    <div id="footer">
         Copyright &copy; 2019, Seth Morabito &lt;web@loomcom.com&gt;.
 
         Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">AGPL 3</a>.
-      </div>
     </div>
+</div>
 
 
-    <script language="javascript">
-      const DEFAULT_WPM = 20;
-      const DEFAULT_FARNSWORTH = 5;
-      const DEFAULT_GROUP_COUNT = 50;
-      const DEFAULT_GROUP_LEN = 5;
-
-          const wordsBlock = `
+<script type="application/javascript">
+    const DEFAULT_WPM = 20;
+    const DEFAULT_FARNSWORTH = 8;
+    const wordsBlock = `
 <div class="container">
-    <h3>Call Signs</h3>
+    <label for="callsignsCheckbox">Call Signs</label>
     <input type="checkbox" id="callsignsCheckbox" />
 </div>
 <div class="container">
-    <h3>Prosigns</h3>
+    <label for="prosignsCheckbox">Prosigns</label>
     <input type="checkbox" id="prosignsCheckbox" />
 </div>
 `;
 
-          const groupsBlock = `
+    const groupsBlock = `
 <div class="container">
-    <h3>Letters</h3>
+    <label for="lettersCheckbox">Letters</label>
     <input type="checkbox" id="lettersCheckbox" />
 </div>
 <div class="container">
-    <h3>Numbers</h3>
+    <label for="numbersCheckbox">Numbers</label>
     <input type="checkbox" id="numbersCheckbox" />
 </div>
 <div class="container">
-    <h3>Symbols</h3>
+    <label for="numbersCheckbox">Symbols</label>
     <input type="checkbox" id="symbolsCheckbox" />
 </div>
-`;      
-      var text;
+`;
 
-      var charNum = 0;
+    const wpmSelect = $('wpmSelect');
+    const fwSelect = $('fwSelect');
+    const typeSelect = $('typeSelect');
+    const textButton = $('textButton');
+    const sendButton = $('sendButton');
+    const cancelButton = $('cancelButton');
+    const sendText = $('sendText');
 
-      function $(id) {
-          return document.getElementById(id);
-      }
+    let text;
+    let charNum = 0;
 
-      function disableUi() {
-          const type = $("typeSelect").value;
+    function $(id) {
+        return document.getElementById(id);
+    }
 
-          $("wpmSelect").disabled = true;
-          $("fwSelect").disabled = true;
-          $("textButton").disabled = true;
-          $("sendButton").disabled = true;
-          $("cancelButton").disabled = false;
-          $("sendText").disabled = true;
-          $("typeSelect").disabled = true;
-          if (type === 'words') {
-              $("callsignsCheckbox").disabled = true;
-              $("prosignsCheckbox").disabled = true;
-          } else {
-              $("lettersCheckbox").disabled = true;
-              $("numbersCheckbox").disabled = true;
-              $("symbolsCheckbox").disabled = true;
-          }
-      }
+    function disableUi() {
+        const type = typeSelect.value;
+        wpmSelect.disabled = true;
+        fwSelect.disabled = true;
+        textButton.disabled = true;
+        sendButton.disabled = true;
+        cancelButton.disabled = false;
+        sendText.disabled = true;
+        typeSelect.disabled = true;
+        if (type === 'words') {
+            $('callsignsCheckbox').disabled = true;
+            $('prosignsCheckbox').disabled = true;
+        } else {
+            $('lettersCheckbox').disabled = true;
+            $('numbersCheckbox').disabled = true;
+            $('symbolsCheckbox').disabled = true;
+        }
+    }
 
-      function enableUi() {
-          const type = $("typeSelect").value;
+    function enableUi() {
+        const type = typeSelect.value;
+        $('output').innerHTML = '';
+        wpmSelect.disabled = false;
+        fwSelect.disabled = false;
+        textButton.disabled = false;
+        sendButton.disabled = false;
+        cancelButton.disabled = true;
+        sendText.disabled = false;
+        typeSelect.disabled = false;
+        if (type === 'words') {
+            $('callsignsCheckbox').disabled = false;
+            $('prosignsCheckbox').disabled = false;
+        } else {
+            $('lettersCheckbox').disabled = false;
+            $('numbersCheckbox').disabled = false;
+            $('symbolsCheckbox').disabled = false;
+        }
+    }
 
-          $("output").innerHTML = "";
-          $("wpmSelect").disabled = false;
-          $("fwSelect").disabled = false;
-          $("textButton").disabled = false;
-          $("sendButton").disabled = false;
-          $("cancelButton").disabled = true;
-          $("sendText").disabled = false;
-          $("typeSelect").disabled = false;
-          if (type === 'words') {
-              $("callsignsCheckbox").disabled = false;
-              $("prosignsCheckbox").disabled = false;
-          } else {
-              $("lettersCheckbox").disabled = false;
-              $("numbersCheckbox").disabled = false;
-              $("symbolsCheckbox").disabled = false;
-          }
-      }
+    function updateConfig() {
+        const selectedType = $('selectedType');
 
-      function updateConfig() {
-          const type = $("typeSelect").value;
-          if (type === 'words') {
-              $("selectedType").innerHTML = wordsBlock;
+        const type = $("typeSelect").value;
 
-              $("callsignsCheckbox").checked = trainer.enableCallsigns;
-              $("prosignsCheckbox").checked = trainer.enableProsigns;
+        if (type === 'words') {
+            selectedType.innerHTML = wordsBlock;
 
-              $("callsignsCheckbox").onclick = function() {
-                  trainer.enableCallsigns = $("callsignsCheckbox").checked;
-                  updateConfig();
-              };
-              $("prosignsCheckbox").onclick = function() {
-                  trainer.enableProsigns = $("prosignsCheckbox").checked;
-                  updateConfig();
-              };
-          } else {
-              $("selectedType").innerHTML = groupsBlock;
+            const callsignsCheckbox = $('callsignsCheckbox');
+            const prosignsCheckbox = $('prosignsCheckbox');
 
-              $("lettersCheckbox").checked = trainer.enableLetters;
-              $("numbersCheckbox").checked = trainer.enableNumbers;
-              $("symbolsCheckbox").checked = trainer.enableSymbols;
+            callsignsCheckbox.checked = trainer.enableCallsigns;
+            prosignsCheckbox.checked = trainer.enableProsigns;
 
-              $("lettersCheckbox").onclick = function() {
-                  trainer.enableLetters = $("lettersCheckbox").checked;
-                  updateConfig();
-              };
-              $("numbersCheckbox").onclick = function() {
-                  trainer.enableNumbers = $("numbersCheckbox").checked;
-                  updateConfig();
-              };
-              $("symbolsCheckbox").onclick = function() {
-                  trainer.enableSymbols = $("symbolsCheckbox").checked;
-                  updateConfig();
-              };
-          }
+            callsignsCheckbox.onclick = function () {
+                trainer.enableCallsigns = $("callsignsCheckbox").checked;
+                updateConfig();
+            };
+            prosignsCheckbox.onclick = function () {
+                trainer.enableProsigns = $("prosignsCheckbox").checked;
+                updateConfig();
+            };
+        } else {
+            selectedType.innerHTML = groupsBlock;
 
-          generateText();
-      }
+            const lettersCheckbox = $('lettersCheckbox');
+            const numbersCheckbox = $('numbersCheckbox');
+            const symbolsCheckbox = $('symbolsCheckbox');
 
-      function showChar(c) {
-          var newText = text.replace(/@/g, '');
+            lettersCheckbox.checked = trainer.enableLetters;
+            numbersCheckbox.checked = trainer.enableNumbers;
+            symbolsCheckbox.checked = trainer.enableSymbols;
 
-          charNum += c.length;
+            lettersCheckbox.onclick = function () {
+                trainer.enableLetters = $("lettersCheckbox").checked;
+                updateConfig();
+            };
+            numbersCheckbox.onclick = function () {
+                trainer.enableNumbers = $("numbersCheckbox").checked;
+                updateConfig();
+            };
+            symbolsCheckbox.onclick = function () {
+                trainer.enableSymbols = $("symbolsCheckbox").checked;
+                updateConfig();
+            };
+        }
 
-          if ($("displaySelect").value === "delayed") {
-              $("output").innerHTML = "";
-          } else {
-              $("output").innerHTML = c;
-          }
+        generateText();
+    }
 
-          newText = 
-              "<span class=\"hilighted\">" + newText.substring(0, charNum) + "</span>" +
-              newText.substring(charNum, newText.length);
+    function showChar(c) {
+        let newText = text.replace(/@/g, '');
 
-          if (text[charNum + 1] === ' ') {
-              charNum++;
-          }
+        charNum += c.length;
 
-          $("sendText").innerHTML = newText;
-      }
+        if ($("displaySelect").value === "delayed") {
+            $("output").innerHTML = "";
+        } else {
+            $("output").innerHTML = c;
+        }
 
-      function hideChar(c) {
-          if ($("displaySelect").value === "delayed") {
-              $("output").innerHTML = c;
-          } else if ($("displaySelect").value === "immediate") {
-              $("output").innerHTML = "";
-          }
-      }
+        newText =
+            "<span class=\"hilighted\">" + newText.substring(0, charNum) + "</span>" +
+            newText.substring(charNum, newText.length);
 
-      $("wpmSelect").value = DEFAULT_WPM;
-      $("fwSelect").value = DEFAULT_FARNSWORTH;
+        if (text[charNum + 1] === ' ') {
+            charNum++;
+        }
 
-      let trainer = new CwTrainer(DEFAULT_WPM,
-                                  DEFAULT_FARNSWORTH,
-                                  showChar,
-                                  hideChar,
-                                  enableUi,
-                                  enableUi);
+        sendText.innerHTML = newText;
+    }
 
-      function cancel() {
-          trainer.cancel();
-      }
+    function hideChar(c) {
+        const displaySelect = $('displaySelect');
+        if (displaySelect.value === "delayed") {
+            $("output").innerHTML = c;
+        } else if (displaySelect.value === "immediate") {
+            $("output").innerHTML = "";
+        }
+    }
 
-      function generateText() {
-          charNum = 0;
+    wpmSelect.value = DEFAULT_WPM;
+    fwSelect.value = DEFAULT_FARNSWORTH;
 
-          if ($("typeSelect").value === 'words') {
-              text = trainer.randomText(75);
-          } else {
-              text = trainer.randomGroups(60, 5);
-          }
-          
-          $("sendText").innerHTML =
-              text.replace(/@/g, '');
-      }
+    let trainer = new CwTrainer(DEFAULT_WPM,
+        DEFAULT_FARNSWORTH,
+        showChar,
+        hideChar,
+        enableUi,
+        enableUi);
 
-      function send() {
-          // Webkit requires that a user interaction unsuspend
-          // the audio context, otherwise no audio.
-          trainer.unsuspend();
-          disableUi();
-          charNum = 0;
-          trainer.sendText(text);
-      }
+    function cancel() {
+        trainer.cancel();
+    }
 
-      function setWpm() {
-          trainer.setWpm($("wpmSelect").value,
-                         $("fwSelect").value);
-      }
+    function generateText() {
+        charNum = 0;
 
-      $("wpmSelect").onchange = setWpm;
-      $("fwSelect").onchange = setWpm;
-      $("typeSelect").onchange = updateConfig;
+        if (typeSelect.value === 'words') {
+            text = trainer.randomText(75);
+        } else {
+            text = trainer.randomGroups(60, 5);
+        }
 
-      $("textButton").onclick = generateText;
-      $("sendButton").onclick = send;
-      $("cancelButton").onclick = cancel;
+        $("sendText").innerHTML =
+            text.replace(/@/g, '');
+    }
 
-      updateConfig();
-      generateText();
-    </script>
-  </body>
+    function send() {
+        // Webkit requires that a user interaction unsuspend
+        // the audio context, otherwise no audio.
+        trainer.unsuspend();
+        disableUi();
+        charNum = 0;
+        trainer.sendText(text);
+    }
+
+    function setWpm() {
+        trainer.setWpm($("wpmSelect").value,
+            $("fwSelect").value);
+    }
+
+    wpmSelect.onchange = setWpm;
+    fwSelect.onchange = setWpm;
+    typeSelect.onchange = updateConfig;
+
+    textButton.onclick = generateText;
+    sendButton.onclick = send;
+    cancelButton.onclick = cancel;
+
+    updateConfig();
+    generateText();
+</script>
+</body>
 </html>

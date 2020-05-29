@@ -74,7 +74,10 @@ a {
     font-size: 16pt;
 }
 
-.container h3 {
+.container label {
+    display: block;
+    font-size: 11pt;
+    font-weight: bold;
     margin: 0 0 8px 0;
     padding: 0 8px 0 8px;
 }
@@ -92,10 +95,6 @@ input[type=checkbox] {
     background: #444444;
     color: #ffff00;
     font-style: italic;
-}
-
-.container h3 {
-    font-size: 11pt;
 }
 
 .bigProsign, .prosign {
