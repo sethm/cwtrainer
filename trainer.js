@@ -206,13 +206,27 @@ let CwTrainer = (function () {
         //
         // Set the Words per Minute to be used by this trainer.
         //
+        // wpm: The words per minute to use for each character
+        // fw: The Farnsworth equivalent words per minute
+        //
         setWpm(wpm, fw) {
+            // "1.2" is a magic constant here, derived from the fact that
+            // if you were to send the word "PARIS" one time per minute, each
+            // dot would be 1.2 seconds long. See also:
+            //
+            // http://sv8gxc.blogspot.com/2010/09/morse-code-101-in-wpm-bw-snr.html
+            //
             let fwDotWidth = 1.2 / fw;
 
             dotWidth = 1.2 / wpm;
+
+            // A dash is three dots wide
             dashWidth = dotWidth * 3.0;
 
+            // There are 3 dots of silence between characters
             charSpace = fwDotWidth * 3.0;
+
+            // There are 7 dots of silence between words
             wordSpace = fwDotWidth * 7.0;
         }
 

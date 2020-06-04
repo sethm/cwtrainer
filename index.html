@@ -323,13 +323,13 @@
             $("output").innerHTML = c;
         }
 
+        if (newText[charNum] === ' ') {
+            charNum++;
+        }
+
         newText =
             "<span class=\"hilighted\">" + newText.substring(0, charNum) + "</span>" +
             newText.substring(charNum, newText.length);
-
-        if (text[charNum + 1] === ' ') {
-            charNum++;
-        }
 
         sendText.innerHTML = newText;
     }
