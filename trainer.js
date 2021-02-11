@@ -1,11 +1,13 @@
-//
 // A Visual Farnsworth CW Trainer.
 //
 // Copyright (c) 2019, 2020, Seth Morabito <web@loomcom.com>
 //
 // This software is licensed under the terms of the GNU Affero GPL
 // version 3.0. Please see the file LICENSE.txt for details.
-//
+// Making some changes for my need:
+// - added top 500 words
+// - added repeat: 1, 5, 10, 20
+// - I prefer lower case strings. 
 
 let CwTrainer = (function () {
     // The maximum output level our GainNode should produce.
@@ -17,13 +19,14 @@ let CwTrainer = (function () {
     // small (and therefore inaudible) level.
     const OFF = 0.0001;
 
-    const FREQUENCY = 700;
+    const FREQUENCY = 500;
 
     const SYMBOLS = ['.', ',', '/', '=', '?'];
     const NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
-                     'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-                     'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    const LETTERS = [
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
+        'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+        'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
     // Our Morse Alphabet.
     const CHARS = {
@@ -120,7 +123,38 @@ let CwTrainer = (function () {
         'QRZ', 'QTH', 'QSB', 'QSY', 'R', 'TU', 'RTU', 'TNX',
         'NAME', 'RST', 'CQ', 'AGN', 'ANT', 'DX', 'ES', 'FB',
         'GM', 'GA', 'GE', 'HI', 'HR', 'HW', 'NR', 'OM', 'PSE',
-        'PWR', 'WX', '73', '5NN', '599', 'U', 'BTU', 'TST'
+        'PWR', 'WX', '73', '5NN', '599', 'U', 'BTU', 'TST',
+        'DE',
+        'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that',
+        'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he',
+        'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by',
+        'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an',
+        'will', 'my', 'one', 'all', 'would', 'there', 'their',
+        'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get',
+        'which', 'go', 'me', 'when', 'make', 'can', 'like',
+        'time', 'no', 'just', 'him', 'know', 'take', 'people',
+        'into', 'year', 'your', 'good', 'some', 'could', 'them',
+        'see', 'other', 'than', 'then', 'now', 'look', 'only',
+        'come', 'its', 'over', 'think', 'also', 'back', 'after',
+        'use', 'two', 'how', 'our', 'work', 'first', 'well',
+        'way', 'even', 'new', 'want', 'because', 'any', 'these',
+        'give', 'day', 'most', 'us', 'time', 'be', 'good', 'to',
+        'the', 'person', 'have', 'new', 'of', 'and', 'year', 'do',
+        'first', 'in', 'a', 'way', 'say', 'last', 'for', 'that',
+        'day', 'get', 'long', 'on', 'I', 'thing', 'make', 'great',
+        'with', 'it', 'man', 'go', 'little', 'at', 'not', 'world',
+        'know', 'own', 'by', 'he', 'life', 'take', 'other', 'from',
+        'as', 'hand', 'see', 'old', 'up', 'you', 'part', 'come',
+        'right', 'about', 'this', 'child', 'think', 'big', 'into',
+        'but', 'eye', 'look', 'high', 'over', 'his', 'woman',
+        'want', 'different', 'after', 'they', 'place', 'give',
+        'small', 'her', 'work', 'use', 'large', 'she', 'week',
+        'find', 'next', 'or', 'case', 'tell', 'early', 'an',
+        'point', 'ask', 'young', 'will', 'government', 'work',
+        'important', 'my', 'company', 'seem', 'few', 'one',
+        'number', 'feel', 'public', 'all', 'group', 'try', 'bad',
+        'would', 'problem', 'leave', 'same', 'there', 'fact',
+        'call', 'able', 'their'
     ];
 
     const PROSIGN_LIST = [
@@ -146,17 +180,19 @@ let CwTrainer = (function () {
     class CwTrainer {
 
         constructor(wpm,
-                    fw,
-                    beforeCharCb,
-                    afterCharCb,
-                    afterSendCb,
-                    afterCancelCb) {
+            fw,
+            repeatNumber,
+            beforeCharCb,
+            afterCharCb,
+            afterSendCb,
+            afterCancelCb) {
 
             this.enableLetters = true;
             this.enableNumbers = true;
             this.enableSymbols = true;
             this.enableCallsigns = true;
             this.enableProsigns = true;
+            this.setRepeatNumber(repeatNumber);
 
             this.setWpm(wpm, fw);
 
@@ -166,8 +202,8 @@ let CwTrainer = (function () {
             afterCancelCallback = afterCancelCb;
 
             let AudioContext = (window.AudioContext ||
-                                window.webkitAudioContext ||
-                                false);
+                window.webkitAudioContext ||
+                false);
 
             if (AudioContext) {
                 audioContext = new AudioContext();
@@ -192,23 +228,16 @@ let CwTrainer = (function () {
             }
         }
 
-        //
         // Public API
-        //
-
-        //
         // Unsuspend sending
-        //
         unsuspend() {
             audioContext.resume();
         }
 
-        //
         // Set the Words per Minute to be used by this trainer.
         //
         // wpm: The words per minute to use for each character
         // fw: The Farnsworth equivalent words per minute
-        //
         setWpm(wpm, fw) {
             // "1.2" is a magic constant here, derived from the fact that
             // if you were to send the word "PARIS" one time per minute, each
@@ -230,9 +259,12 @@ let CwTrainer = (function () {
             wordSpace = fwDotWidth * 7.0;
         }
 
-        //
+        setRepeatNumber(repeatNumber) {
+            this.repeatNumber = repeatNumber;
+            this.repeatCounter = this.repeatNumber;
+        }
+
         // Generate random text based on the most common words
-        //
         randomText(numWords) {
             let words = [];
 
@@ -250,12 +282,10 @@ let CwTrainer = (function () {
                 }
             }
 
-            return words.join(" ");
+            return words.join(" ").toLowerCase();
         }
 
-        //
         // Generate random groups of characters
-        //
         randomGroups(numGroups, groupSize) {
             let groups = [];
             let alphabet = [];
@@ -287,25 +317,32 @@ let CwTrainer = (function () {
                 groups.push(group);
             }
 
-            return groups.join(" ");
+            return groups.join(" ").toLowerCase();
         }
 
-        //
         // Send a full text
-        //
-        sendText(text) {
+        sendText(messages, updateDisplayCallback) {
             // Add a small 1/2 second delay after the send button
-            // is clicked.
+            // is clicked. 
             gainNode.gain.setValueAtTime(OFF, audioContext.currentTime);
             time = audioContext.currentTime + 0.5;
+            for (let idx in [...Array(messages.length).keys()]) {
+                setTimeout(() => updateDisplayCallback(idx),
+                    (time - audioContext.currentTime) * 1000.0);
+                gainNode.gain.setValueAtTime(OFF, time);
+                time = time + 0.5;
 
-            let words = text.split(' ');
+                let words = messages[idx].split(' ');
 
-            for (let i = 0; i < words.length; i++) {
-                this._sendWord(words[i]);
-                if (i < words.length - 1) {
-                    time = time + wordSpace;
+                for (let i = 0; i < words.length; i++) {
+                    this._sendWord(words[i]);
+                    if (i < words.length - 1) {
+                        time = time + wordSpace;
+                    }
                 }
+                // Add a small 1 second delay after each batch
+                gainNode.gain.setValueAtTime(OFF, audioContext.currentTime);
+                time = time + 1.0;
             }
 
             if (afterSendCallback) {
@@ -314,9 +351,7 @@ let CwTrainer = (function () {
             }
         }
 
-        //
         // Suspend sending immediately
-        //
         cancel() {
             gainNode.gain.cancelScheduledValues(audioContext.currentTime);
             gainNode.gain.setValueAtTime(OFF, audioContext.currentTime);
@@ -332,10 +367,7 @@ let CwTrainer = (function () {
             }
         }
 
-        //
-        // Private functions
-        //
-
+        // Private functions ------------------------------
         _makeCallSign() {
             let callsign = CALLPREFIXES[Math.floor(Math.random() * CALLPREFIXES.length)];
 
@@ -354,9 +386,7 @@ let CwTrainer = (function () {
             return callsign;
         }
 
-        //
         // Send an individual element, either a dot or a dash.
-        //
         _sendDotOrDash(width) {
             gainNode.gain.setValueAtTime(OFF, time);
             gainNode.gain.exponentialRampToValueAtTime(ON, time + RAMP);
@@ -365,9 +395,7 @@ let CwTrainer = (function () {
             time = time + width + RAMP;
         }
 
-        //
         // Send a list of dots and dashes
-        //
         _sendMorseString(str) {
             for (let i = 0; i < str.length; i++) {
                 let e = str[i];
@@ -382,12 +410,10 @@ let CwTrainer = (function () {
             }
         }
 
-        //
         // Send an individual ASCII character or Prosign
-        //
         _doSend(morseValue, val) {
             if (beforeCharCallback) {
-                pendingTimeouts.push(setTimeout(function() {
+                pendingTimeouts.push(setTimeout(function () {
                     beforeCharCallback(val);
                 }, (time - audioContext.currentTime) * 1000.0));
             }
@@ -397,7 +423,7 @@ let CwTrainer = (function () {
             }
 
             if (afterCharCallback) {
-                pendingTimeouts.push(setTimeout(function() {
+                pendingTimeouts.push(setTimeout(function () {
                     afterCharCallback(val);
                 }, (time - audioContext.currentTime) * 1000.0));
             }
@@ -410,7 +436,7 @@ let CwTrainer = (function () {
                     wordOrProsign = wordOrProsign.substring(1, wordOrProsign.length);
                 }
 
-                this._doSend(PROSIGNS[wordOrProsign], wordOrProsign);
+                this._doSend(PROSIGNS[wordOrProsign.toUpperCase()], wordOrProsign);
                 return;
             }
 

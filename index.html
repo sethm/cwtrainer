@@ -55,9 +55,32 @@
             <select class="select" id="typeSelect">
                 <option value="words">Top CW Words</option>
                 <option value="random">Random Groups</option>
+                <option value="mix">Mixed Groups</option>
             </select>
         </div>
-        <div class="container cgroup" id="selectedType"></div>
+        <div class="container">
+            <label for="repeatSelect">Repeat</label>
+            <select class="select" id="repeatSelect">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+        <div class="container cgroup" id="selectedType">
+<div class="container">
+    <label for="lettersCheckbox">Letters</label>
+    <input type="checkbox" id="lettersCheckbox">
+</div>
+<div class="container">
+    <label for="numbersCheckbox">Numbers</label>
+    <input type="checkbox" id="numbersCheckbox">
+</div>
+<div class="container">
+    <label for="numbersCheckbox">Symbols</label>
+    <input type="checkbox" id="symbolsCheckbox">
+</div>
+</div>
     </div>
     <div>
         <div id="sendText"></div>
@@ -127,7 +150,7 @@
                     </li>
                 </ol>
 
-            <dt>Type</dt>
+            </dd><dt>Type</dt>
             <dd>Select between <em>Top CW Words</em>, which will display
                 a random selection of the top 100 most common words, or
                 <em>Random Groups</em>, which will send random groups of
@@ -180,8 +203,10 @@
 
 
 <script type="application/javascript">
-    const DEFAULT_WPM = 20;
-    const DEFAULT_FARNSWORTH = 8;
+    const DEFAULT_WPM = 25;
+    const DEFAULT_FARNSWORTH = 10;
+    const DEFAULT_TYPE = 'mix';
+    const DEFAULT_REPEAT = 5;
     const wordsBlock = `
 <div class="container">
     <label for="callsignsCheckbox">Call Signs</label>
@@ -211,13 +236,16 @@
     const wpmSelect = $('wpmSelect');
     const fwSelect = $('fwSelect');
     const typeSelect = $('typeSelect');
+    const repeatSelect = $('repeatSelect');
+
     const textButton = $('textButton');
     const sendButton = $('sendButton');
     const cancelButton = $('cancelButton');
     const sendText = $('sendText');
 
-    let text;
+    let messages = Array(0);
     let charNum = 0;
+    let messageIndex = 0;
 
     function $(id) {
         return document.getElementById(id);
@@ -227,6 +255,7 @@
         const type = typeSelect.value;
         wpmSelect.disabled = true;
         fwSelect.disabled = true;
+        repeatSelect.disabled = true;
         textButton.disabled = true;
         sendButton.disabled = true;
         cancelButton.disabled = false;
@@ -247,6 +276,8 @@
         $('output').innerHTML = '';
         wpmSelect.disabled = false;
         fwSelect.disabled = false;
+        repeatSelect.disabled = false;
+
         textButton.disabled = false;
         sendButton.disabled = false;
         cancelButton.disabled = true;
@@ -309,11 +340,11 @@
             };
         }
 
-        generateText();
+        prepareMessages();
     }
 
     function showChar(c) {
-        let newText = text.replace(/@/g, '');
+        let newText = messages[messageIndex].replace(/@/g, '');
 
         charNum += c.length;
 
@@ -345,9 +376,12 @@
 
     wpmSelect.value = DEFAULT_WPM;
     fwSelect.value = DEFAULT_FARNSWORTH;
+    repeatSelect.value = DEFAULT_REPEAT;
+    typeSelect.value = DEFAULT_TYPE;
 
     let trainer = new CwTrainer(DEFAULT_WPM,
         DEFAULT_FARNSWORTH,
+        DEFAULT_REPEAT,
         showChar,
         hideChar,
         enableUi,
@@ -357,17 +391,35 @@
         trainer.cancel();
     }
 
-    function generateText() {
+    function prepareMessages() {
         charNum = 0;
 
-        if (typeSelect.value === 'words') {
-            text = trainer.randomText(75);
-        } else {
-            text = trainer.randomGroups(60, 5);
+        messages = Array(0);
+        for (_ in [...Array(parseInt(repeatSelect.value)).keys()]) {
+            let text = '';
+            if (typeSelect.value === 'words') { 
+                text = trainer.randomText(75);
+            } else if (typeSelect.value === 'random'){
+                text = trainer.randomGroups(60, 5);
+            } else {
+                // mixed
+                if (Math.random() > 0.4) {
+                    text = trainer.randomText(75);
+                } else {
+                    text = trainer.randomGroups(60, 5);
+                }
+            }
+            messages.push(text);
+            console.log('messages after push:', messages)
         }
+        updateDisplayMessage(0);
+    }
 
-        $("sendText").innerHTML =
-            text.replace(/@/g, '');
+    function updateDisplayMessage(msgIndex) {
+        console.log('updateDisplayMessage() called. with:', msgIndex)
+        charNum = 0;
+        messageIndex = msgIndex;
+        $("sendText").innerHTML = messages[msgIndex].replace(/@/g, '');
     }
 
     function send() {
@@ -376,7 +428,7 @@
         trainer.unsuspend();
         disableUi();
         charNum = 0;
-        trainer.sendText(text);
+        trainer.sendText(messages, updateDisplayMessage);
     }
 
     function setWpm() {
@@ -384,16 +436,22 @@
             $("fwSelect").value);
     }
 
+    function setRepeatNumber() {
+        trainer.setRepeatNumber($("repeatSelect").value)
+    }
+
     wpmSelect.onchange = setWpm;
     fwSelect.onchange = setWpm;
     typeSelect.onchange = updateConfig;
+    repeatSelect.onchange = setRepeatNumber
 
-    textButton.onclick = generateText;
+    textButton.onclick = prepareMessages;
     sendButton.onclick = send;
     cancelButton.onclick = cancel;
 
     updateConfig();
-    generateText();
+    prepareMessages();
 </script>
-</body>
-</html>
+
+
+</body></html>
