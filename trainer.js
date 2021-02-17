@@ -326,9 +326,11 @@ let CwTrainer = (function () {
             // is clicked. 
             gainNode.gain.setValueAtTime(OFF, audioContext.currentTime);
             time = audioContext.currentTime + 0.5;
+
             for (let idx in [...Array(messages.length).keys()]) {
                 setTimeout(() => updateDisplayCallback(idx),
                     (time - audioContext.currentTime) * 1000.0);
+
                 gainNode.gain.setValueAtTime(OFF, time);
                 time = time + 0.5;
 
@@ -341,7 +343,7 @@ let CwTrainer = (function () {
                     }
                 }
                 // Add a small 1 second delay after each batch
-                gainNode.gain.setValueAtTime(OFF, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(OFF, time);
                 time = time + 1.0;
             }
 
